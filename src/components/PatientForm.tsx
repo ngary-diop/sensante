@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState } from "react";
 
 export default function PatientForm({
@@ -14,7 +14,8 @@ export default function PatientForm({
     e.preventDefault();
     setLoading(true);
 
-    const formData = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
     const data = {
       nom: formData.get("nom"),
       prenom: formData.get("prenom"),
@@ -32,7 +33,7 @@ export default function PatientForm({
     });
 
     if (res.ok) {
-      e.currentTarget.reset();
+      form.reset();
       onSuccess();
     }
     setLoading(false);
