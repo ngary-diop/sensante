@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useState } from "react";
 import PatientCard from "@/components/PatientCard";
 import PatientForm from "@/components/PatientForm";
@@ -18,11 +18,11 @@ export default function PatientsPage() {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(true);
 
-  async function chargerPatients() {
-    const res = await fetch("/api/patients");
+  async function chargerPatients() { try {
+    const res = await fetch("/api/patients?t=" + Date.now());
     const data = await res.json();
-    setPatients(data);
-    setLoading(false);
+    if (Array.isArray(data)) { setPatients(data); } else { setPatients([]); }
+    } catch(e) { console.error(e); } finally { setLoading(false); }
   }
 
   useEffect(() => {
@@ -71,3 +71,6 @@ export default function PatientsPage() {
     </div>
   );
 }
+
+
+
