@@ -37,14 +37,15 @@ export default function ConsultationForm({
     );
   }
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (symptomes.length === 0) {
       alert("Cochez au moins un symptôme.");
       return;
     }
     setLoading(true);
-    const formData = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
     const res = await fetch("/api/consultations", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -56,7 +57,7 @@ export default function ConsultationForm({
     });
     if (res.ok) {
       setSymptomes([]);
-      e.currentTarget.reset();
+      form.reset();
       onSuccess();
     }
     setLoading(false);
