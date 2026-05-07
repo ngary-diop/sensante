@@ -55,9 +55,9 @@ export default function ConsultationForm({
       }),
     });
     if (res.ok) {
-      setSymptomes([]);
-      e.currentTarget.reset();
-      onSuccess();
+    setSymptomes([]);
+    (e.target as HTMLFormElement).reset();
+    onSuccess();
     }
     setLoading(false);
   }
