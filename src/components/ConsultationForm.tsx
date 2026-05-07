@@ -24,8 +24,7 @@ export default function ConsultationForm({
   useEffect(() => {
     fetch("/api/patients")
       .then((res) => res.json())
-      .then(setPatients);
-  }, []);
+  .then((data) => setPatients(Array.isArray(data) ? data : data.patients ?? []));}, []);
   function toggleSymptome(s: string) {
     setSymptomes((prev) =>
       prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]
