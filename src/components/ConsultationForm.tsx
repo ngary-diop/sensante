@@ -1,13 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
-
 interface Patient {
   id: number;
   nom: string;
   prenom: string;
   region: string;
 }
-
 const SYMPTOMES_DISPONIBLES = [
   "Fièvre", "Toux", "Maux de tête",
   "Fatigue", "Diarrhée", "Vomissements",
@@ -15,7 +13,6 @@ const SYMPTOMES_DISPONIBLES = [
   "Frissons", "Douleur thoracique",
   "Essoufflement", "Vertiges",
 ];
-
 export default function ConsultationForm({
   onSuccess,
 }: {
@@ -24,19 +21,16 @@ export default function ConsultationForm({
   const [patients, setPatients] = useState<Patient[]>([]);
   const [symptomes, setSymptomes] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     fetch("/api/patients")
       .then((res) => res.json())
       .then(setPatients);
   }, []);
-
   function toggleSymptome(s: string) {
     setSymptomes((prev) =>
       prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]
     );
   }
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (symptomes.length === 0) {
@@ -55,20 +49,18 @@ export default function ConsultationForm({
       }),
     });
     if (res.ok) {
-    setSymptomes([]);
-    (e.target as HTMLFormElement).reset();
-    onSuccess();
+      setSymptomes([]);
+      (e.target as HTMLFormElement).reset();
+      onSuccess();
     }
     setLoading(false);
   }
-
   return (
     <form
       onSubmit={handleSubmit}
       className="bg-white rounded-lg shadow-md p-6 space-y-6"
     >
       <h3 className="text-lg font-bold text-gray-800">Nouvelle consultation</h3>
-
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-2">
           Patient
@@ -78,15 +70,14 @@ export default function ConsultationForm({
           required
           className="w-full p-3 border rounded-lg text-gray-800 bg-white"
         >
-          <option value="" className="text-gray-800">Sélectionner un patient</option>
+          <option value="">Sélectionner un patient</option>
           {patients.map((p) => (
-            <option key={p.id} value={p.id} className="text-gray-800">
+            <option key={p.id} value={p.id}>
               {p.prenom} {p.nom} — {p.region}
             </option>
           ))}
         </select>
       </div>
-
       <div>
         <label className="block text-sm font-semibold text-gray-700 mb-2">
           Symptômes ({symptomes.length} sélectionnés)
@@ -100,3 +91,36 @@ export default function ConsultationForm({
                   ? "bg-orange-50 border-orange-400"
                   : "hover:bg-gray-50"
               }`}
+            >
+              <input
+                type="checkbox"
+                checked={symptomes.includes(s)}
+                onChange={() => toggleSymptome(s)}
+                className="accent-orange-500"
+              />
+              <span className="text-sm text-gray-700">{s}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+      <div>
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
+          Notes
+        </label>
+        <textarea
+          name="notes"
+          rows={3}
+          className="w-full p-3 border rounded-lg text-gray-800"
+          placeholder="Observations supplémentaires..."
+        />
+      </div>
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full bg-orange-500 text-white py-3 rounded-lg font-semibold hover:bg-orange-600 transition disabled:opacity-50"
+      >
+        {loading ? "Enregistrement..." : "Enregistrer la consultation"}
+      </button>
+    </form>
+  );
+}
