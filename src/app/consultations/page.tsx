@@ -75,7 +75,7 @@ export default function ConsultationsPage() {
               </div>
 
               <div className="flex flex-wrap gap-2 mt-3">
-                {(c.symptomes as string[]).map((s, i) => (
+                {(Array.isArray(c.symptomes) ? c.symptomes : typeof c.symptomes === 'string' ? JSON.parse(c.symptomes) : []).map((s: string, i: number) => (
                   <span
                     key={i}
                     className="bg-orange-100 text-orange-700 text-xs px-2 py-1 rounded-full"

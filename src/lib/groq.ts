@@ -58,7 +58,18 @@ Propose un pré-diagnostic.`;
     const response = completion.choices[0]?.message?.content || "{}";
 
     try {
-        return JSON.parse(response);
+        const parsed = JSON.parse(response);
+        let confiance = Number(parsed.confiance) || 0;
+        
+        // Validation : Si l'IA renvoie un ratio (ex: 0.87) au lieu d'un pourcentage (87)
+        if (confiance > 0 && confiance <= 1) {
+            confiance = confiance * 100;
+        }
+        
+        return {
+            ...parsed,
+            confiance: Math.round(confiance),
+        };
     } catch {
         return {
             diagnostic: "Analyse impossible. Réessayez.",
