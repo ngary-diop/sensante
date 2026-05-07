@@ -1,7 +1,6 @@
 "use client";
 import { useSession } from "next-auth/react";
 import PatientCard from "@/components/PatientCard";
-import ConsultationCard from "@/components/ConsultationCard";
 import AlerteIA from "@/components/AlerteIA";
 import StatCard from "@/components/StatCard";
 import Link from "next/link";
@@ -34,8 +33,6 @@ export default function Home() {
           <PatientCard nom="Ibrahima Ba" region="Thiès" age={45} sexe="M" />
           <PatientCard nom="Awa Diallo" region="Saint-Louis" age={28} sexe="F" />
         </div>
-        <h2 className="text-xl font-semibold text-gray-700 mb-4">Dernière consultation</h2>
-        <ConsultationCard patient="Aminata Sow" date="18 mars 2025" symptomes="Fièvre, toux, fatigue" statut="termine" />
         <div className="mt-6">
           <AlerteIA diagnostic="Suspicion de paludisme. Orientation recommandée." confiance={78} niveau="urgent" />
         </div>

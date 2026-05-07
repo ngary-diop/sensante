@@ -4,24 +4,40 @@ import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 
 async function main() {
-  console.log('Début du peuplement de la base de données (Schéma SénSanté)...')
+  console.log('Début du peuplement de la base de données (SénSanté Team + Data)...')
 
-  const hashedPassword = await bcrypt.hash('password123', 10)
+  // 1. Création des Utilisateurs (L'équipe complète)
+  const membres = [
+    { prenom: "Le Gardien",    nom: "Diop",    email: "gardien@sensante.sn",    password: "gardien123",    role: "AGENT"   },
+    { prenom: "L'Architecte",  nom: "Diop",    email: "architecte@sensante.sn", password: "architecte123", role: "ADMIN"   },
+    { prenom: "Le Bouclier",   nom: "Diop",    email: "bouclier@sensante.sn",   password: "bouclier123",   role: "AGENT"   },
+    { prenom: "Le Médecin",    nom: "Diop",    email: "medecin@sensante.sn",    password: "medecin123",    role: "MEDECIN" },
+    { prenom: "L'Oracle",      nom: "Diop",    email: "oracle@sensante.sn",     password: "oracle123",     role: "AGENT"   },
+    { prenom: "Le Pilote",     nom: "Diop",    email: "pilote@sensante.sn",     password: "pilote123",     role: "AGENT"   },
+    { prenom: "Admin",         nom: "SénSanté", email: "admin@sensante.sn",      password: "password123",   role: "ADMIN"   },
+  ];
 
-  // 1. Création des Utilisateurs
-  const admin = await prisma.user.upsert({
-    where: { email: 'admin@sensante.sn' },
-    update: {},
-    create: {
-      email: 'admin@sensante.sn',
-      nom: 'SénSanté',
-      prenom: 'Admin',
-      password: hashedPassword,
-      role: 'ADMIN',
-    },
-  })
+  const usersCreated = [];
+  for (const m of membres) {
+    const hashed = await bcrypt.hash(m.password, 10);
+    const user = await prisma.user.upsert({
+      where: { email: m.email },
+      update: { password: hashed },
+      create: {
+        nom: m.nom,
+        prenom: m.prenom,
+        email: m.email,
+        password: hashed,
+        role: m.role as "AGENT" | "MEDECIN" | "ADMIN",
+      },
+    });
+    usersCreated.push(user);
+    console.log(`✅ ${m.prenom} prêt : ${user.email}`);
+  }
 
-  // 2. Création de Patients
+  const admin = usersCreated.find(u => u.email === 'admin@sensante.sn')!;
+
+  // 2. Création de Patients (40 patients)
   const regions = ['Dakar', 'Thiès', 'Saint-Louis', 'Touba', 'Ziguinchor', 'Louga', 'Kaolack', 'Kolda', 'Matam', 'Fatick']
   const prenoms = ['Moussa', 'Awa', 'Ibrahima', 'Fatou', 'Ousmane', 'Mariama', 'Modou', 'Khadidiatou', 'Cheikh', 'Astou']
   const noms = ['Diop', 'Ndiaye', 'Sarr', 'Fall', 'Sene', 'Gueye', 'Ba', 'Sow', 'Diallo', 'Faye']
@@ -44,7 +60,7 @@ async function main() {
     })
   }
 
-  // 3. Création de Consultations
+  // 3. Création de Consultations (150 consultations)
   console.log('Création des consultations...')
   const patientsList = await prisma.patient.findMany()
   const diagnostics = [
@@ -78,15 +94,14 @@ async function main() {
     })
   }
 
-  console.log('Peuplement terminé avec succès !')
+  console.log('Base de données synchronisée et peuplée !');
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
   })
-  .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

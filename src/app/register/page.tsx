@@ -19,8 +19,12 @@ export default function RegisterPage() {
     if (res.ok) {
       router.push("/login");
     } else {
-      const data = await res.json();
-      setError(data.error);
+      try {
+        const data = await res.json();
+        setError(data.error || "Une erreur s'est produite.");
+      } catch (err) {
+        setError("Erreur de connexion au serveur.");
+      }
     }
   };
 
