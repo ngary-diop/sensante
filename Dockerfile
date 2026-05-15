@@ -8,6 +8,8 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 
 # 4. Installer les dépendances
+# Ajout de openssl pour Prisma sur Alpine
+RUN apk add --no-cache openssl
 RUN npm ci
 
 # 5. Copier le reste du code source
@@ -17,8 +19,8 @@ COPY . .
 RUN npx prisma generate
 
 # 7. Compiler Next.js pour la production
-ENV GROQ_API_KEY="dummy"
-ENV NEXTAUTH_SECRET="dummy"
+# On fournit une clé bidon pour passer l'étape de build
+ENV GROQ_API_KEY=dummy_key
 RUN npm run build
 
 # 8. Déclarer le port utilisé

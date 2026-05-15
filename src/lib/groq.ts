@@ -1,7 +1,7 @@
 import Groq from "groq-sdk";
 
 const groq = new Groq({
-    apiKey: process.env.GROQ_API_KEY,
+    apiKey: process.env.GROQ_API_KEY || "missing_key",
 });
 
 const SYSTEM_PROMPT = `Tu es un assistant médical pour le Sénégal. 

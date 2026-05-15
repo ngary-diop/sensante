@@ -1,6 +1,4 @@
-version: "3.8"
 services:
-  # Service 1 : Base de données PostgreSQL
   db:
     image: postgres:16
     restart: always
@@ -18,7 +16,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # Service 2 : Application Next.js
   app:
     build: .
     restart: always
@@ -33,6 +30,6 @@ services:
       db:
         condition: service_healthy
 
-# Volumes persistants
 volumes:
   pgdata:
+
