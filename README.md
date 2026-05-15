@@ -1,50 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛡️ SénSanté - Plateforme de Santé Communautaire
 
-## Getting Started
+SénSanté est une application moderne de suivi médical conçue pour les agents de santé communautaire au Sénégal. Elle permet la gestion des patients, le suivi des consultations et propose une analyse assistée par Intelligence Artificielle (IA).
 
-First, run the development server:
+## 🚀 Fonctionnalités Clés
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Tableau de Bord Bento** : Une interface moderne et intuitive pour visualiser les KPI en un coup d'œil.
+- **Gestion des Patients** : Répertoire complet avec recherche en temps réel et filtrage géographique.
+- **Diagnostics IA** : Analyse automatisée des symptômes pour assister les agents de santé.
+- **Sécurité "Gardien"** : Protection robuste des données médicales et gestion des rôles (Agent, Médecin, Admin).
+- **Design Premium** : Thème Blanc & Jaune Solaire inspiré de l'identité numérique moderne du Sénégal.
+
+---
+
+## 🛠️ Installation avec Docker (Recommandé)
+
+Le projet est entièrement conteneurisé pour garantir un fonctionnement identique sur toutes les machines.
+
+### 1. Prérequis
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installé et lancé.
+- Un terminal (PowerShell ou Bash).
+
+### 2. Lancement de l'application
+Depuis la racine du projet, lancez la commande suivante :
+```powershell
+docker compose up -d --build
+```
+Cette commande va :
+- Télécharger les images nécessaires (PostgreSQL, Node.js).
+- Configurer la base de données.
+- Compiler l'application Next.js.
+- Lancer le serveur sur [http://localhost:3000](http://localhost:3000).
+
+### 3. Initialisation des données (Seed)
+Pour tester l'application avec des patients et des consultations de démonstration :
+```powershell
+docker compose exec app npx prisma db seed
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🔑 Identifiants de Test
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Rôle | Email | Mot de passe |
+| :--- | :--- | :--- |
+| **Gardien (Agent)** | `gardien@sensante.sn` | `gardien123` |
+| **Médecin** | `medecin@sensante.sn` | `medecin123` |
+| **Administrateur** | `admin@sensante.sn` | `password123` |
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🏗️ Architecture Technique
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Frontend** : Next.js 15+ (App Router), Tailwind CSS 4, Lucide React (Icônes).
+- **Backend** : Next.js API Routes, Prisma ORM.
+- **Base de données** : PostgreSQL 16.
+- **Authentification** : NextAuth.js avec cryptage Bcrypt.
+- **IA** : Intégration Groq Cloud (Llama 3).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📦 Commandes Utiles
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Voir les logs** : `docker compose logs -f app`
+- **Arrêter le projet** : `docker compose down`
+- **Réinitialiser la BDD** : `docker compose exec app npx prisma migrate reset`
+- **Explorer la BDD (Interface Web)** : 
+  ```powershell
+  docker compose exec app npx prisma studio
+  ```
+  *(Disponible ensuite sur http://localhost:5555)*
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
 
-## Authentification
+## 🤝 Contribution
 
-L'application utilise NextAuth.js avec le provider Credentials.
+1. Créez une branche pour votre fonctionnalité (`git checkout -b feature/ma-feature`).
+2. Committez vos changements avec des messages clairs en français.
+3. Poussez sur votre branche (`git push origin feature/ma-feature`).
+4. Ouvrez une Pull Request sur GitHub.
 
-- Inscription : `/register`
-- Connexion : `/login`
-- Les mots de passe sont hashés avec bcrypt (jamais stockés en clair)
-- Les sessions utilisent JWT
+---
 
-Générer un secret NextAuth :
-\```bash
-openssl rand -base64 32
-\```
+*Développé avec ❤️ pour la santé communautaire.*
