@@ -17,6 +17,8 @@ COPY . .
 RUN npx prisma generate
 
 # 7. Compiler Next.js pour la production
+ENV GROQ_API_KEY="dummy"
+ENV NEXTAUTH_SECRET="dummy"
 RUN npm run build
 
 # 8. Déclarer le port utilisé
