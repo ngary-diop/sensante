@@ -107,7 +107,7 @@ export default function DashboardPage() {
                   innerRadius={60}
                   outerRadius={100} 
                   paddingAngle={5}
-                  label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  label={({name, percent}) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                 >
                   {stats.parRegion.map((_, i) => (
                     <Cell key={i} fill={COULEURS_PIE[i % COULEURS_PIE.length]} />
